@@ -16,8 +16,9 @@ const data = [
 
 function App() {
 	const [file, setFile] = useState(null);
-  const [csvFile, setCsvFile] = useState(null);
+    const [csvFile, setCsvFile] = useState(null);
 	const hiddenFileInput = useRef(null);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
 
 	const handleFileChange = (e) => {
 		if (e.target.files) {
@@ -31,18 +32,24 @@ function App() {
 			console.log("Uploading file...");
 
 			const formData = new FormData();
-			formData.append("file", file);
+			// formData.append("url", file);
+            formData.append("url", "https://storage.cloud.google.com/slip-reader/2024-10-17%2013.36.44.jpg")
 
 			try {
 				// You can write the URL of your server or any other endpoint used for file upload
-				const result = await fetch("https://slip-reader-processor-415f9c26f2e3.herokuapp.com/upload", {
+				const result = await fetch("https://hook.eu2.make.com/bbq63ckftbz5c12jalogovngfus966wv", {
 					method: "POST",
-					body: formData,
+					body: JSON.stringify({url: "https://storage.cloud.google.com/slip-reader/2024-10-17%2013.36.44.jpg"}),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
 				});
 
-				const data = await result.json();
+                console.log(result);
+				// const data = await result.json();
 
-        setCsvFile(data)
+                // setCsvFile(data)
+                setUploadSuccess(true)
 
 				console.log(data);
 			} catch (error) {
@@ -93,9 +100,14 @@ function App() {
 						Upload pdf
 					</button>
 				)}
-				{csvFile && <CSVLink data={data} headers={headers} className="bg-teal-500 text-white px-10 py-5 rounded-md">
+				 {/* {csvFile && <CSVLink data={data} headers={headers} className="bg-teal-500 text-white px-10 py-5 rounded-md">
 					Download csv here
-				</CSVLink>}
+				 </CSVLink>} */}
+                 {uploadSuccess && <div>
+                    Upload Success!
+                 </div>
+
+                 }
 			</header>
 		</div>
 	);
